@@ -1,21 +1,28 @@
 package dao
 
-import "github.com/Rodrigolpb/GolangDAO/entities"
+import (
+	"database/sql"
+
+	"github.com/Rodrigolpb/GolangDAO/entities"
+)
 
 // AnswerTypeDAO - AnswerType data access object type, represents answer_types table
 type AnswerTypeDAO struct {
-	BaseDAO
+	baseDAO
 	tableName string
 }
 
 // NewAnswerTypeDAO - AnswerTypeDAO constructor
-func NewAnswerTypeDAO() *AnswerTypeDAO {
+func NewAnswerTypeDAO(db *sql.DB) *AnswerTypeDAO {
 	return &AnswerTypeDAO{
+		baseDAO: baseDAO{
+			db: db,
+		},
 		tableName: "answer_types",
 	}
 }
 
 // Create - Adds new value to the configured table
-func (at *AnswerTypeDAO) Create(answerType entities.AnswerType) {
-	at.BaseDAO.Create(at.tableName, answerType)
+func (at *AnswerTypeDAO) Create(answerType entities.AnswerType) (int64, error) {
+	return at.baseDAO.Create(at.tableName, answerType)
 }

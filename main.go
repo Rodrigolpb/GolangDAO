@@ -1,8 +1,13 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
+	"log"
+
 	"github.com/Rodrigolpb/GolangDAO/dao"
 	"github.com/Rodrigolpb/GolangDAO/entities"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type answerType struct {
@@ -11,9 +16,19 @@ type answerType struct {
 }
 
 func main() {
-	atDAO := dao.NewAnswerTypeDAO()
-	atDAO.Create(entities.AnswerType{
-		ID:    1,
-		Title: "Testing",
+	db, err := sql.Open("mysql", "root:admin@/retail_chain_db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	atDAO := dao.NewAnswerTypeDAO(db)
+
+	rows, err := atDAO.Create(entities.AnswerType{
+		Title: "Swin",
 	})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(rows)
 }

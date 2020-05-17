@@ -11,14 +11,14 @@ type baseDAO struct {
 	db *sql.DB
 }
 
-func getEntityProperties(object interface{}, isInsert bool) ([]string, []interface{}) {
+func getEntityProperties(object interface{}, isWriteOperation bool) ([]string, []interface{}) {
 	keys := []string{}
 	values := make([]interface{}, 0, 0)
 
 	objectType := reflect.TypeOf(object)
 	for i := 0; i < objectType.NumField(); i++ {
 		field := reflect.ValueOf(object).Field(i)
-		if objectType.Field(i).Tag.Get("ignoreoninsert") == "" || !isInsert {
+		if objectType.Field(i).Tag.Get("ignoreOnWrite") == "" || !isWriteOperation {
 			keys = append(keys, objectType.Field(i).Tag.Get("column"))
 			values = append(values, field.Interface())
 		}
@@ -30,7 +30,7 @@ func getEntityProperties(object interface{}, isInsert bool) ([]string, []interfa
 // Create - Executes insert operation into database and returns the number of affected rows
 func (dao *baseDAO) Create(tableName string, object interface{}) (int64, error) {
 
-	keys, values := getEntityProperties(object, true)
+	keys, values := getEntityProperties(object, false)
 	query := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s?)", tableName, strings.Join(keys, ", "), strings.Repeat("?, ", len(keys)-1))
 	stmt, _ := dao.db.Prepare(query)
 	defer stmt.Close()

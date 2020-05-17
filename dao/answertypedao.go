@@ -26,3 +26,6 @@ func NewAnswerTypeDAO(db *sql.DB) *AnswerTypeDAO {
 func (at *AnswerTypeDAO) Create(answerType entities.AnswerType) (int64, error) {
 	return at.baseDAO.Create(at.tableName, answerType)
 }
+
+// ReadOne - queries answertype by ID
+func (at *AnswerTypeDAO) ReadOne(id int32) {}

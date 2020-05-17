@@ -24,7 +24,7 @@ func main() {
 	atDAO := dao.NewAnswerTypeDAO(db)
 
 	rows, err := atDAO.Create(entities.AnswerType{
-		Title: "Swin",
+		Title: "Indestructible",
 	})
 
 	if err != nil {
